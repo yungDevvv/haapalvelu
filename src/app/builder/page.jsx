@@ -2,12 +2,15 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 import { Save, Eye, ArrowLeft, Palette } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useRouter, useSearchParams } from "next/navigation";
 import BlocksSidebar from "@/components/wedding-builder/BlocksSidebar";
 import BuilderCanvas from "@/components/wedding-builder/BuilderCanvas";
 import TabbedBlockEditor from "@/components/wedding-builder/TabbedBlockEditor";
+import EditorSidebar from "@/components/wedding-builder/EditorSidebar";
 import SectionNavigation from "@/components/wedding-builder/SectionNavigation";
 import GlobalStylesEditor from "@/components/wedding-builder/GlobalStylesEditor";
 import { getTheme } from "@/lib/wedding-themes";
@@ -22,6 +25,8 @@ import RSVPBlock, { rsvpBlockDefaults } from "@/components/wedding-builder/block
 import GalleryBlock, { galleryBlockDefaults } from "@/components/wedding-builder/blocks/GalleryBlock";
 import TextBlock, { textBlockDefaults } from "@/components/wedding-builder/blocks/TextBlock";
 import DividerBlock, { dividerBlockDefaults } from "@/components/wedding-builder/blocks/DividerBlock";
+import SpacerBlock, { spacerBlockDefaults } from "@/components/wedding-builder/blocks/SpacerBlock";
+import NavigationBlock, { navigationBlockDefaults } from "@/components/wedding-builder/blocks/NavigationBlock";
 
 // Block defaults mapping
 const blockDefaults = {
@@ -32,7 +37,9 @@ const blockDefaults = {
     rsvp: rsvpBlockDefaults,
     gallery: galleryBlockDefaults,
     text: textBlockDefaults,
-    divider: dividerBlockDefaults
+    divider: dividerBlockDefaults,
+    spacer: spacerBlockDefaults,
+    navigation: navigationBlockDefaults
 };
 
 // Wedding Page Builder - Inner component with searchParams
@@ -42,11 +49,14 @@ function WeddingBuilderInner() {
     const [currentTheme, setCurrentTheme] = useState('romantic');
     const [blocks, setBlocks] = useState([]);
     const [editingBlock, setEditingBlock] = useState(null);
-    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    // const [isEditDialogOpen, setIsEditDialogOpen] = useState(false); // Dialog disabled
+    const [activeIndex, setActiveIndex] = useState(null);
     const [currentTemplate, setCurrentTemplate] = useState(null); // Store template with blockDefaults
     const [showGlobalStyles, setShowGlobalStyles] = useState(false); // Toggle global styles panel
+    const [editorDirty, setEditorDirty] = useState(false); // Track unsaved changes in sidebar
 
     const theme = getTheme(currentTheme);
+    const sidebarWidth = 460; // px, keep in sync with EditorSidebar
 
     // Load template if provided in URL
     useEffect(() => {
@@ -71,7 +81,7 @@ function WeddingBuilderInner() {
     }, [searchParams]);
 
     // Add new block with template defaults applied
-    const handleAddBlock = (blockType) => {
+    const handleAddBlock = (blockType, insertPosition = null) => {
         // Start with base block defaults
         let blockData = { ...blockDefaults[blockType] };
         
@@ -91,7 +101,14 @@ function WeddingBuilderInner() {
             component: null // Will be rendered dynamically
         };
 
-        setBlocks(prev => [...prev, newBlock]);
+        setBlocks(prev => {
+            if (insertPosition !== null && insertPosition >= 0 && insertPosition <= prev.length) {
+                const newBlocks = [...prev];
+                newBlocks.splice(insertPosition, 0, newBlock);
+                return newBlocks;
+            }
+            return [...prev, newBlock];
+        });
     };
 
     // Move block up or down
@@ -105,10 +122,11 @@ function WeddingBuilderInner() {
         setBlocks(newBlocks);
     };
 
-    // Edit block
+    // Edit block -> open right sidebar
     const handleEditBlock = (index) => {
+        setActiveIndex(index);
         setEditingBlock({ ...blocks[index], index });
-        setIsEditDialogOpen(true);
+        // setIsEditDialogOpen(true); // disabled: using right sidebar instead
     };
 
     // Save edited block
@@ -168,6 +186,12 @@ function WeddingBuilderInner() {
             case 'divider':
                 component = <DividerBlock data={block.data} theme={theme} />;
                 break;
+            case 'spacer':
+                component = <SpacerBlock data={block.data} theme={theme} />;
+                break;
+            case 'navigation':
+                component = <NavigationBlock data={block.data} theme={theme} />;
+                break;
             default:
                 component = null;
         }
@@ -178,7 +202,7 @@ function WeddingBuilderInner() {
     const handleSave = () => {
         // Here you would save to backend/context
         console.log('Saving page:', { theme: currentTheme, blocks });
-        alert('✅ Sivu tallennettu!');
+        toast.success('Tallennettu', { description: '✅ Sivu tallennettu onnistuneesti.' });
     };
 
     // Preview
@@ -210,8 +234,25 @@ function WeddingBuilderInner() {
         }
     };
 
+    const handleInlineUpdate = (updatedData) => {
+        if (activeIndex !== null) {
+            const newBlocks = [...blocks];
+            newBlocks[activeIndex] = {
+                ...newBlocks[activeIndex],
+                data: updatedData
+            };
+            setBlocks(newBlocks);
+        }
+    };
+
+    const handleCloseInline = () => {
+        setActiveIndex(null);
+        setEditingBlock(null);
+    };
+
     return (
-        <div className="flex flex-col overflow-y-auto ">
+        <div className="flex flex-col">
+            <Toaster />
             {/* Top bar */}
             <div className="bg-gray-900 text-white px-4 py-3 flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -262,36 +303,66 @@ function WeddingBuilderInner() {
 
             {/* Main builder area */}
             <div className="flex flex-1">
-                {/* Sidebar */}
-                <BlocksSidebar
-                    onAddBlock={handleAddBlock}
-                    currentTheme={currentTheme}
-                    onThemeChange={setCurrentTheme}
-                    currentTemplate={currentTemplate}
-                />
+                {/* Left Sidebar: hide when editor sidebar is open */}
+                {activeIndex === null && (
+                    <BlocksSidebar
+                        onAddBlock={handleAddBlock}
+                        currentTheme={currentTheme}
+                        onThemeChange={setCurrentTheme}
+                        currentTemplate={currentTemplate}
+                    />
+                )}
 
                 {/* Canvas */}
-                <div className="flex-1 max-w-7xl mx-auto">
+                <div
+                    className="flex-1 max-w-7xl mx-auto transition-all duration-300"
+                    style={activeIndex !== null ? { marginRight: sidebarWidth } : undefined}
+                >
                     <BuilderCanvas
                         blocks={renderedBlocks}
                         theme={theme}
                         onMoveBlock={handleMoveBlock}
                         onEditBlock={handleEditBlock}
                         onDeleteBlock={handleDeleteBlock}
+                        activeIndex={activeIndex}
+                        onInlineUpdate={handleInlineUpdate}
+                        onCloseEdit={handleCloseInline}
+                        currentTemplate={currentTemplate}
+                        showAnchoredEditor={false}
+                        onAddBlock={handleAddBlock}
                     />
                 </div>
 
-            </div>
+                {/* Right-side settings panel */}
+                <EditorSidebar
+                    open={activeIndex !== null}
+                    onClose={() => {
+                        if (editorDirty) {
+                            alert('Sinulla on tallentamattomia muutoksia. Tallenna ennen sulkemista.');
+                            return;
+                        }
+                        handleCloseInline();
+                    }}
+                    width={sidebarWidth}
+                    blockClose={editorDirty}
+                    blockMessage={'Sinulla on tallentamattomia muutoksia. Tallenna ennen sulkemista.'}
+                >
+                    {activeIndex !== null && blocks[activeIndex] && (
+                        <TabbedBlockEditor
+                            key={blocks[activeIndex].id}
+                            block={blocks[activeIndex]}
+                            onSave={handleInlineUpdate}
+                            onUpdate={handleInlineUpdate}
+                            onDirtyChange={setEditorDirty}
+                            theme={theme}
+                            currentTemplate={currentTemplate}
+                            inline={true}
+                            onCancel={handleCloseInline}
+                        />
+                    )}
+                </EditorSidebar>
 
-            {/* Edit dialog */}
-            <TabbedBlockEditor
-                block={editingBlock}
-                open={isEditDialogOpen}
-                onOpenChange={setIsEditDialogOpen}
-                onSave={handleSaveBlock}
-                theme={theme}
-                currentTemplate={currentTemplate}
-            />
+            </div>
 
             {/* Section navigation */}
             <SectionNavigation

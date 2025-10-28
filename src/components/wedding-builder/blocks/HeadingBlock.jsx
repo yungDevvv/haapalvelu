@@ -12,7 +12,7 @@ export default function HeadingBlock({ data, theme, animated = false }) {
     font,
     color,
     backgroundColor,
-    paddingY = 40,
+    paddingY = 20,
     paddingX = 16
   } = data;
 
@@ -23,7 +23,7 @@ export default function HeadingBlock({ data, theme, animated = false }) {
     transition: { duration: 0.6, ease: "easeOut" }
   } : {};
 
-  const BlockWrapper = animated ? motion.div : 'div';
+  const ContentWrapper = animated ? motion.div : 'div';
   
   // Size mapping for heading levels
   const sizeClasses = {
@@ -36,8 +36,7 @@ export default function HeadingBlock({ data, theme, animated = false }) {
   const HeadingTag = level;
 
   return (
-    <BlockWrapper 
-      {...animationProps} 
+    <div 
       style={{
         backgroundColor: backgroundColor || 'transparent',
         paddingTop: `${paddingY}px`,
@@ -46,7 +45,10 @@ export default function HeadingBlock({ data, theme, animated = false }) {
         paddingRight: `${paddingX}px`
       }}
     >
-      <div className="container mx-auto px-4">
+      <ContentWrapper 
+        {...animationProps}
+        className="container mx-auto px-4"
+      >
         <div className={`max-w-4xl mx-auto text-${alignment}`}>
           <HeadingTag 
             className={`${sizeClasses[level]} ${font ? getFontClass(font) : theme.fonts.heading}`} 
@@ -58,8 +60,8 @@ export default function HeadingBlock({ data, theme, animated = false }) {
             {text}
           </HeadingTag>
         </div>
-      </div>
-    </BlockWrapper>
+      </ContentWrapper>
+    </div>
   );
 }
 
@@ -67,5 +69,8 @@ export default function HeadingBlock({ data, theme, animated = false }) {
 export const headingBlockDefaults = {
   text: "Otsikko",
   level: 'h2',
-  alignment: 'center'
+  alignment: 'center',
+  font: 'playfair',
+  color: '#6b5b7b',
+  backgroundColor: '#e8dff5'
 };

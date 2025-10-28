@@ -86,7 +86,7 @@ export default function GlobalStylesEditor({ template, onUpdate }) {
   return (
     <div className="space-y-6 p-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-4">
+      {/* <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-4">
         <div className="flex items-start gap-3">
           <Palette className="w-6 h-6 text-purple-600 flex-shrink-0 mt-0.5" />
           <div>
@@ -99,7 +99,7 @@ export default function GlobalStylesEditor({ template, onUpdate }) {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Style Categories */}
       <div className="space-y-4">

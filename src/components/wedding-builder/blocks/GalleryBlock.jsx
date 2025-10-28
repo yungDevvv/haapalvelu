@@ -6,11 +6,10 @@ import { motion } from "framer-motion";
 // Gallery block
 export default function GalleryBlock({ data, theme, animated = false }) {
   const { 
-    title, 
-    description, 
     images = [], 
-    backgroundColor, 
-    titleColor 
+    backgroundColor,
+    paddingY = 20,
+    paddingX = 16
   } = data;
 
   const animationProps = animated ? {
@@ -20,29 +19,22 @@ export default function GalleryBlock({ data, theme, animated = false }) {
     transition: { duration: 0.6, ease: "easeOut" }
   } : {};
 
-  const BlockWrapper = animated ? motion.div : 'div';
+  const ContentWrapper = animated ? motion.div : 'div';
 
   return (
-    <BlockWrapper 
-      {...animationProps} 
-      className="py-20"
-      style={{ backgroundColor: backgroundColor || 'white' }}
+    <div
+      style={{ 
+        backgroundColor: backgroundColor || 'white',
+        paddingTop: `${paddingY}px`,
+        paddingBottom: `${paddingY}px`,
+        paddingLeft: `${paddingX}px`,
+        paddingRight: `${paddingX}px`
+      }}
     >
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 
-            className={`text-4xl md:text-5xl mb-4 ${theme.fonts.heading}`} 
-            style={{ color: titleColor || theme.colors.primary }}
-          >
-            {title}
-          </h2>
-          {description && (
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {description}
-            </p>
-          )}
-        </div>
-
+      <ContentWrapper
+        {...animationProps}
+        className="container mx-auto px-4"
+      >
         {images.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {images.map((image, index) => (
@@ -76,15 +68,15 @@ export default function GalleryBlock({ data, theme, animated = false }) {
             <p className="text-gray-500">Lisää kuvia galleriaan</p>
           </motion.div>
         )}
-      </div>
-    </BlockWrapper>
+      </ContentWrapper>
+    </div>
   );
 }
 
 // Default data for new gallery blocks
 export const galleryBlockDefaults = {
-  title: "Kuvagalleria",
-  description: "Muistoja yhteiseltä matkaltamme",
+  paddingY: 20,
+  paddingX: 16,
   images: [
     { url: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070", caption: "Romanttinen hetki" },
     { url: "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?q=80&w=2070", caption: "Yhdessä" },

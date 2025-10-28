@@ -15,12 +15,17 @@ export default function HeroBlock({ data, theme, animated = false }) {
     backgroundColor,
     overlay = true,
     overlayOpacity = 0.4,
-    titleFont, 
-    subtitleFont,
+    font,
+    titleFont, // Keep for backward compatibility
+    subtitleFont, // Keep for backward compatibility
     titleColor,
     subtitleColor,
     styleVariant = 'fullscreen' // fullscreen, centered, split, minimal
   } = data;
+  
+  // Use single font or fallback to individual fonts for backward compatibility
+  const actualTitleFont = font || titleFont;
+  const actualSubtitleFont = font || subtitleFont;
   
   const animationProps = animated ? {
     initial: { opacity: 0 },
@@ -63,9 +68,9 @@ export default function HeroBlock({ data, theme, animated = false }) {
         <div className="relative z-10 text-center px-4">
           {subtitle && (
             <p 
-              className={`text-xl mb-4 opacity-90 ${subtitleFont ? getFontClass(subtitleFont) : theme.fonts.body}`}
+              className={`text-xl mb-4 opacity-90 ${actualSubtitleFont ? getFontClass(actualSubtitleFont) : theme.fonts.body}`}
               style={{ 
-                fontFamily: subtitleFont ? getFontByValue(subtitleFont).label : undefined,
+                fontFamily: actualSubtitleFont ? getFontByValue(actualSubtitleFont).label : undefined,
                 color: subtitleColor || '#ffffff'
               }}
             >
@@ -74,9 +79,9 @@ export default function HeroBlock({ data, theme, animated = false }) {
           )}
           
           <h1 
-            className={`text-6xl md:text-8xl mb-8 ${titleFont ? getFontClass(titleFont) : theme.fonts.heading}`}
+            className={`text-6xl md:text-8xl mb-8 ${actualTitleFont ? getFontClass(actualTitleFont) : theme.fonts.heading}`}
             style={{ 
-              fontFamily: titleFont ? getFontByValue(titleFont).label : undefined,
+              fontFamily: actualTitleFont ? getFontByValue(actualTitleFont).label : undefined,
               color: titleColor || '#ffffff'
             }}
           >
@@ -130,9 +135,9 @@ export default function HeroBlock({ data, theme, animated = false }) {
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
           {subtitle && (
             <p 
-              className={`text-lg mb-3 opacity-90 ${subtitleFont ? getFontClass(subtitleFont) : theme.fonts.body}`}
+              className={`text-lg mb-3 opacity-90 ${actualSubtitleFont ? getFontClass(actualSubtitleFont) : theme.fonts.body}`}
               style={{ 
-                fontFamily: subtitleFont ? getFontByValue(subtitleFont).label : undefined,
+                fontFamily: actualSubtitleFont ? getFontByValue(actualSubtitleFont).label : undefined,
                 color: subtitleColor || '#ffffff'
               }}
             >
@@ -141,9 +146,9 @@ export default function HeroBlock({ data, theme, animated = false }) {
           )}
           
           <h1 
-            className={`text-5xl md:text-7xl mb-6 ${titleFont ? getFontClass(titleFont) : theme.fonts.heading}`}
+            className={`text-5xl md:text-7xl mb-6 ${actualTitleFont ? getFontClass(actualTitleFont) : theme.fonts.heading}`}
             style={{ 
-              fontFamily: titleFont ? getFontByValue(titleFont).label : undefined,
+              fontFamily: actualTitleFont ? getFontByValue(actualTitleFont).label : undefined,
               color: titleColor || '#ffffff'
             }}
           >
@@ -200,9 +205,9 @@ export default function HeroBlock({ data, theme, animated = false }) {
             <div className="text-center md:text-left max-w-lg">
               {subtitle && (
                 <p 
-                  className={`text-lg mb-3 ${subtitleFont ? getFontClass(subtitleFont) : theme.fonts.body}`}
+                  className={`text-lg mb-3 ${actualSubtitleFont ? getFontClass(actualSubtitleFont) : theme.fonts.body}`}
                   style={{ 
-                    fontFamily: subtitleFont ? getFontByValue(subtitleFont).label : undefined,
+                    fontFamily: actualSubtitleFont ? getFontByValue(actualSubtitleFont).label : undefined,
                     color: subtitleColor || '#6b7280'
                   }}
                 >
@@ -211,9 +216,9 @@ export default function HeroBlock({ data, theme, animated = false }) {
               )}
               
               <h1 
-                className={`text-5xl md:text-6xl mb-6 ${titleFont ? getFontClass(titleFont) : theme.fonts.heading}`}
+                className={`text-5xl md:text-6xl mb-6 ${actualTitleFont ? getFontClass(actualTitleFont) : theme.fonts.heading}`}
                 style={{ 
-                  fontFamily: titleFont ? getFontByValue(titleFont).label : undefined,
+                  fontFamily: actualTitleFont ? getFontByValue(actualTitleFont).label : undefined,
                   color: titleColor || '#1f2937'
                 }}
               >
@@ -256,9 +261,9 @@ export default function HeroBlock({ data, theme, animated = false }) {
           <div className="max-w-3xl mx-auto text-center">
             {subtitle && (
               <p 
-                className={`text-base mb-2 uppercase tracking-wider ${subtitleFont ? getFontClass(subtitleFont) : theme.fonts.body}`}
+                className={`text-base mb-2 uppercase tracking-wider ${actualSubtitleFont ? getFontClass(actualSubtitleFont) : theme.fonts.body}`}
                 style={{ 
-                  fontFamily: subtitleFont ? getFontByValue(subtitleFont).label : undefined,
+                  fontFamily: actualSubtitleFont ? getFontByValue(actualSubtitleFont).label : undefined,
                   color: subtitleColor || '#6b7280'
                 }}
               >
@@ -267,9 +272,9 @@ export default function HeroBlock({ data, theme, animated = false }) {
             )}
             
             <h1 
-              className={`text-6xl md:text-7xl mb-8 ${titleFont ? getFontClass(titleFont) : theme.fonts.heading}`}
+              className={`text-6xl md:text-7xl mb-8 ${actualTitleFont ? getFontClass(actualTitleFont) : theme.fonts.heading}`}
               style={{ 
-                fontFamily: titleFont ? getFontByValue(titleFont).label : undefined,
+                fontFamily: actualTitleFont ? getFontByValue(actualTitleFont).label : undefined,
                 color: titleColor || '#1f2937'
               }}
             >
@@ -314,6 +319,7 @@ export const heroBlockDefaults = {
   date: "15.07.2024",
   location: "Suomenlinna, Helsinki",
   backgroundImage: null,
+  font: null,
   titleColor: '#ffffff',
   subtitleColor: '#ffffff',
   styleVariant: 'fullscreen'

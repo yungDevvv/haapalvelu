@@ -11,6 +11,8 @@ import RSVPBlock from "@/components/wedding-builder/blocks/RSVPBlock";
 import GalleryBlock from "@/components/wedding-builder/blocks/GalleryBlock";
 import TextBlock from "@/components/wedding-builder/blocks/TextBlock";
 import DividerBlock from "@/components/wedding-builder/blocks/DividerBlock";
+import SpacerBlock from "@/components/wedding-builder/blocks/SpacerBlock";
+import NavigationBlock from "@/components/wedding-builder/blocks/NavigationBlock";
 
 // Preview page with animations
 export default function PreviewPage() {
@@ -66,6 +68,12 @@ export default function PreviewPage() {
             break;
           case 'divider':
             Component = DividerBlock;
+            break;
+          case 'spacer':
+            Component = SpacerBlock;
+            break;
+          case 'navigation':
+            Component = NavigationBlock;
             break;
           default:
             return null;

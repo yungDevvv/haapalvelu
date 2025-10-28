@@ -9,12 +9,11 @@ import { motion } from "framer-motion";
 // RSVP form block
 export default function RSVPBlock({ data, theme, animated = false }) {
   const { 
-    title, 
-    description, 
     backgroundColor, 
-    titleColor, 
-    descriptionColor,
-    buttonColor 
+    buttonColor,
+    styleVariant = 'cards',
+    paddingY = 20,
+    paddingX = 16
   } = data;
   const [selected, setSelected] = useState(null);
 
@@ -30,60 +29,85 @@ export default function RSVPBlock({ data, theme, animated = false }) {
     transition: { duration: 0.6, ease: "easeOut" }
   } : {};
 
-  const BlockWrapper = animated ? motion.div : 'div';
+  const ContentWrapper = animated ? motion.div : 'div';
 
   return (
-    <BlockWrapper 
-      {...animationProps} 
-      className="py-20"
-      style={{ backgroundColor: backgroundColor || `bg-gradient-to-br ${theme.gradients.section}` }}
+    <div
+      style={{ 
+        backgroundColor: backgroundColor || `bg-gradient-to-br ${theme.gradients.section}`,
+        paddingTop: `${paddingY}px`,
+        paddingBottom: `${paddingY}px`,
+        paddingLeft: `${paddingX}px`,
+        paddingRight: `${paddingX}px`
+      }}
     >
-      <div className="container mx-auto px-4">
+      <ContentWrapper
+        {...animationProps}
+        className="container mx-auto px-4"
+      >
         <div className="max-w-2xl mx-auto text-center">
-          <h2 
-            className={`text-4xl md:text-5xl mb-4 ${theme.fonts.heading}`} 
-            style={{ color: titleColor || theme.colors.primary }}
-          >
-            {title}
-          </h2>
-          
-          {description && (
-            <p 
-              className="text-lg mb-8"
-              style={{ color: descriptionColor || '#6b7280' }}
-            >
-              {description}
-            </p>
-          )}
-
           {!selected ? (
-            <div className="grid md:grid-cols-2 gap-4 mt-8">
-              {/* Accept button */}
-              <Card 
-                className="cursor-pointer hover:shadow-xl transition-all hover:scale-105"
-                onClick={() => handleChoice('accepted')}
-              >
-                <CardContent className="p-8 text-center">
-                  <div className="text-5xl mb-4">✨</div>
-                  <h3 className="text-xl font-semibold mb-2">Tulen häihin</h3>
-                  <p className="text-sm text-gray-600">Vahvista osallistumisesi</p>
-                </CardContent>
-              </Card>
+            styleVariant === 'buttons' ? (
+              <div className="flex flex-col md:flex-row gap-4 mt-8 justify-center max-w-lg mx-auto">
+                <Button
+                  onClick={() => handleChoice('accepted')}
+                  className="flex-1 py-6 text-lg"
+                  style={{ backgroundColor: buttonColor || theme.colors.primary }}
+                >
+                  Tulen häihin
+                </Button>
+                <Button
+                  onClick={() => handleChoice('declined')}
+                  variant="outline"
+                  className="flex-1 py-6 text-lg"
+                >
+                  En voi osallistua
+                </Button>
+              </div>
+            ) : styleVariant === 'minimal' ? (
+              <div className="flex flex-col md:flex-row gap-3 mt-8 justify-center max-w-lg mx-auto">
+                <button
+                  onClick={() => handleChoice('accepted')}
+                  className="px-6 py-3 text-center font-semibold rounded-lg transition-all hover:shadow-md"
+                  style={{ backgroundColor: buttonColor || theme.colors.primary, color: 'white' }}
+                >
+                  Tulen häihin
+                </button>
+                <button
+                  onClick={() => handleChoice('declined')}
+                  className="px-6 py-3 text-center font-semibold rounded-lg border-2 transition-all hover:shadow-md"
+                  style={{ borderColor: buttonColor || theme.colors.primary, color: buttonColor || theme.colors.primary }}
+                >
+                  En voi osallistua
+                </button>
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 gap-4">
+                <Card 
+                  className="cursor-pointer hover:shadow-xl transition-all hover:scale-105"
+                  onClick={() => handleChoice('accepted')}
+                >
+                  <CardContent className="p-8 text-center">
+                    <div className="w-12 h-12 rounded-full mx-auto mb-4" style={{ backgroundColor: buttonColor || theme.colors.primary }}></div>
+                    <h3 className="text-xl font-semibold mb-2">Tulen häihin</h3>
+                    <p className="text-sm text-gray-600">Vahvista osallistumisesi</p>
+                  </CardContent>
+                </Card>
 
-              {/* Decline button */}
-              <Card 
-                className="cursor-pointer hover:shadow-xl transition-all hover:scale-105"
-                onClick={() => handleChoice('declined')}
-              >
-                <CardContent className="p-8 text-center">
-                  <div className="text-5xl mb-4">😔</div>
-                  <h3 className="text-xl font-semibold mb-2">En voi osallistua</h3>
-                  <p className="text-sm text-gray-600">Valitettavasti en pääse</p>
-                </CardContent>
-              </Card>
-            </div>
+                <Card 
+                  className="cursor-pointer hover:shadow-xl transition-all hover:scale-105"
+                  onClick={() => handleChoice('declined')}
+                >
+                  <CardContent className="p-8 text-center">
+                    <div className="w-12 h-12 rounded-full mx-auto mb-4 border-2" style={{ borderColor: buttonColor || theme.colors.primary }}></div>
+                    <h3 className="text-xl font-semibold mb-2">En voi osallistua</h3>
+                    <p className="text-sm text-gray-600">Valitettavasti en pääse</p>
+                  </CardContent>
+                </Card>
+              </div>
+            )
           ) : (
-            <Card className="mt-8 border-2" style={{ borderColor: theme.colors.primary }}>
+            <Card className=" border-2" style={{ borderColor: theme.colors.primary }}>
               <CardContent className="p-8 text-center">
                 <div 
                   className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center text-white"
@@ -96,20 +120,21 @@ export default function RSVPBlock({ data, theme, animated = false }) {
                 </h3>
                 <p className="text-gray-600">
                   {selected === 'accepted' 
-                    ? 'Nähdään häissä! 💕' 
+                    ? 'Nähdään häissä!' 
                     : 'Toivottavasti näemme toisella kertaa!'}
                 </p>
               </CardContent>
             </Card>
           )}
         </div>
-      </div>
-    </BlockWrapper>
+      </ContentWrapper>
+    </div>
   );
 }
 
 // Default data for new RSVP blocks
 export const rsvpBlockDefaults = {
-  title: "Vahvista Osallistumisesi",
-  description: "Ilmoitathan meille osallistumisestasi viimeistään 1.6.2024"
+  styleVariant: 'cards',
+  paddingY: 20,
+  paddingX: 16
 };

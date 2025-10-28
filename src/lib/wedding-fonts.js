@@ -60,6 +60,13 @@ export const weddingFonts = [
     googleFont: 'Parisienne',
     category: 'Script'
   },
+  {
+    value: 'amatic-sc',
+    label: 'Amatic SC',
+    className: 'font-cursive',
+    googleFont: 'Amatic+SC:wght@400;700',
+    category: 'Script'
+  },
   
   // Modern Sans-Serif Fonts
   {

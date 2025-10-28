@@ -8,11 +8,11 @@ export default function FontSelector({ value, onChange, placeholder = "Valitse f
   const fontsByCategory = getFontsByCategory();
 
   return (
-    <Select value={value} onValueChange={onChange}>
+    <Select value={value || ""} onValueChange={onChange}>
       <SelectTrigger className="w-full">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent className="max-h-[400px]">
+      <SelectContent className="max-h-[400px] z-[2002]">
         {Object.entries(fontsByCategory).map(([category, fonts]) => (
           <SelectGroup key={category}>
             <SelectLabel className="text-xs font-semibold text-gray-500 px-2 py-1">

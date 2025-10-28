@@ -28,7 +28,7 @@ export default function ColorPicker({ value, onChange, placeholder = "#ffffff" }
             />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-3" align="start">
+        <PopoverContent className="w-auto p-3 z-[2002]" align="start">
           <HexColorPicker color={displayColor} onChange={onChange} />
           
           {/* Quick preset colors */}

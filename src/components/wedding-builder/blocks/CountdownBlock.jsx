@@ -6,36 +6,38 @@ import { motion } from "framer-motion";
 // Countdown timer block
 export default function CountdownBlock({ data, theme, animated = false }) {
   const { 
-    title, 
-    description,
     targetDate, 
     backgroundColor, 
-    titleColor, 
-    descriptionColor 
+    titleColor,
+    styleVariant,
+    paddingY = 20,
+    paddingX = 16
   } = data;
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
+    // Determine effective target once per targetDate change
+    const now = new Date();
+    let effectiveTarget = new Date(targetDate);
+    // Helsinki default: 21.11.2025 10:00 (UTC+02:00 at that date)
+    const helsinkiDefault = new Date('2025-11-21T10:00:00+02:00');
+    if (isNaN(effectiveTarget.getTime()) || effectiveTarget <= now) {
+      effectiveTarget = helsinkiDefault > now ? helsinkiDefault : new Date(now.getTime() + 1000 * 60 * 60 * 24 * 180);
+    }
+
     const calculateTimeLeft = () => {
-      const difference = new Date(targetDate) - new Date();
-      
-      if (difference > 0) {
-        return {
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60)
-        };
-      }
-      
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+      const current = new Date();
+      const difference = effectiveTarget.getTime() - current.getTime();
+      return {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+      };
     };
 
     setTimeLeft(calculateTimeLeft());
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
-
+    const timer = setInterval(() => setTimeLeft(calculateTimeLeft()), 1000);
     return () => clearInterval(timer);
   }, [targetDate]);
 
@@ -46,71 +48,95 @@ export default function CountdownBlock({ data, theme, animated = false }) {
     transition: { duration: 0.6, ease: "easeOut" }
   } : {};
 
-  const BlockWrapper = animated ? motion.div : 'div';
+  const labels = {
+    days: 'Päivää',
+    hours: 'Tuntia',
+    minutes: 'Minuuttia',
+    seconds: 'Sekuntia',
+  };
+
+  const colorPrimary = titleColor || theme.colors.primary;
+
+  const CardsLayout = () => (
+    <div className="flex justify-center gap-4 md:gap-8 flex-wrap">
+      {[{k:'days', v:timeLeft.days},{k:'hours', v:timeLeft.hours},{k:'minutes', v:timeLeft.minutes},{k:'seconds', v:timeLeft.seconds}].map(({k, v}) => (
+        <div key={k} className="bg-white rounded-2xl shadow-lg p-6 md:p-8 min-w-[110px]">
+          <div className="text-5xl md:text-6xl font-bold" style={{ color: colorPrimary }}>{v}</div>
+          <div className="text-sm md:text-base text-gray-600 mt-2">{labels[k]}</div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const MinimalLayout = () => (
+    <div className="flex items-end justify-center gap-6 md:gap-10 flex-wrap">
+      {[{k:'days', v:timeLeft.days},{k:'hours', v:timeLeft.hours},{k:'minutes', v:timeLeft.minutes},{k:'seconds', v:timeLeft.seconds}].map(({k, v}, idx) => (
+        <div key={k} className="text-center">
+          <div className="text-6xl md:text-7xl font-bold tracking-tight" style={{ color: colorPrimary }}>{v}</div>
+          <div className="text-xs md:text-sm uppercase tracking-widest opacity-70" style={{ color: descriptionColor || theme.colors.text }}>{labels[k]}</div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const FramedLayout = () => (
+    <div className="mx-auto max-w-4xl bg-white/90 border border-pink-200 rounded-3xl shadow-md px-6 md:px-10 py-8">
+      <CardsLayout />
+    </div>
+  );
+
+  const GradientLayout = () => (
+    <div className="rounded-3xl px-6 md:px-10 py-8 bg-gradient-to-br from-rose-50 to-purple-50">
+      <MinimalLayout />
+    </div>
+  );
+
+  const sectionBG = !backgroundColor && (styleVariant === 'gradient')
+    ? ''
+    : (!backgroundColor ? `bg-gradient-to-br ${theme.gradients.section}` : '');
+
+  const renderByVariant = () => {
+    switch (styleVariant) {
+      case 'minimal':
+        return <MinimalLayout />;
+      case 'framed':
+        return <FramedLayout />;
+      case 'gradient':
+        return <GradientLayout />;
+      case 'cards':
+      default:
+        return <CardsLayout />;
+    }
+  };
+
+  const ContentWrapper = animated ? motion.div : 'div';
 
   return (
-    <BlockWrapper 
-      {...animationProps} 
-      className={`py-20 ${!backgroundColor ? `bg-gradient-to-br ${theme.gradients.section}` : ''}`}
-      style={{ backgroundColor: backgroundColor || 'transparent' }}
+    <div
+      className={`${sectionBG}`}
+      style={{ 
+        backgroundColor: backgroundColor || 'transparent',
+        paddingTop: `${paddingY}px`,
+        paddingBottom: `${paddingY}px`,
+        paddingLeft: `${paddingX}px`,
+        paddingRight: `${paddingX}px`
+      }}
     >
-      <div className="container mx-auto px-4 text-center">
-        <h2 
-          className={`text-4xl md:text-5xl mb-4 ${theme.fonts.heading}`} 
-          style={{ color: titleColor || theme.colors.primary }}
-        >
-          {title}
-        </h2>
-        
-        {description && (
-          <p 
-            className="text-lg mb-12 opacity-80"
-            style={{ color: descriptionColor || theme.colors.text }}
-          >
-            {description}
-          </p>
-        )}
-        
-        <div className="flex justify-center gap-4 md:gap-8 flex-wrap">
-          {/* Days */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 min-w-[100px]">
-            <div className="text-5xl md:text-6xl font-bold" style={{ color: titleColor || theme.colors.primary }}>
-              {timeLeft.days}
-            </div>
-            <div className="text-sm md:text-base text-gray-600 mt-2">Päivää</div>
-          </div>
-          
-          {/* Hours */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 min-w-[100px]">
-            <div className="text-5xl md:text-6xl font-bold" style={{ color: titleColor || theme.colors.primary }}>
-              {timeLeft.hours}
-            </div>
-            <div className="text-sm md:text-base text-gray-600 mt-2">Tuntia</div>
-          </div>
-          
-          {/* Minutes */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 min-w-[100px]">
-            <div className="text-5xl md:text-6xl font-bold" style={{ color: titleColor || theme.colors.primary }}>
-              {timeLeft.minutes}
-            </div>
-            <div className="text-sm md:text-base text-gray-600 mt-2">Minuuttia</div>
-          </div>
-          
-          {/* Seconds */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 min-w-[100px]">
-            <div className="text-5xl md:text-6xl font-bold" style={{ color: titleColor || theme.colors.primary }}>
-              {timeLeft.seconds}
-            </div>
-            <div className="text-sm md:text-base text-gray-600 mt-2">Sekuntia</div>
-          </div>
-        </div>
-      </div>
-    </BlockWrapper>
+      <ContentWrapper
+        {...animationProps}
+        className="container mx-auto px-4 text-center"
+      >
+        {renderByVariant()}
+      </ContentWrapper>
+    </div>
   );
 }
 
 // Default data for new countdown blocks
 export const countdownBlockDefaults = {
-  title: "Aikaa Häihin",
-  targetDate: "2024-07-15T15:00:00"
+  // Default to realistic Finland time (Europe/Helsinki): 21.11.2025 10:00
+  targetDate: "2025-11-21T10:00:00+02:00",
+  styleVariant: 'cards',
+  paddingY: 20,
+  paddingX: 16
 };

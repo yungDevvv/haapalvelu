@@ -7,8 +7,8 @@ export default function DividerBlock({ data, theme, animated = false }) {
   const { 
     dividerStyle = '1',
     color,
-    width = 80,
-    paddingY = 40,
+    width = 25,
+    paddingY = 10,
     backgroundColor
   } = data;
 
@@ -19,11 +19,10 @@ export default function DividerBlock({ data, theme, animated = false }) {
     transition: { duration: 0.6, ease: "easeOut" }
   } : {};
 
-  const BlockWrapper = animated ? motion.div : 'div';
+  const ContentWrapper = animated ? motion.div : 'div';
 
   return (
-    <BlockWrapper 
-      {...animationProps}
+    <div
       style={{
         backgroundColor: backgroundColor || 'transparent',
         paddingTop: `${paddingY}px`,
@@ -31,10 +30,13 @@ export default function DividerBlock({ data, theme, animated = false }) {
       }}
       className="flex items-center justify-center"
     >
+      <ContentWrapper
+        {...animationProps}
+      >
       <div 
         style={{ 
-          width: `${width}%`,
-          maxWidth: '600px'
+          width: `${width}px`,
+          maxWidth: '90vw'
         }}
       >
         <img
@@ -46,7 +48,8 @@ export default function DividerBlock({ data, theme, animated = false }) {
           }}
         />
       </div>
-    </BlockWrapper>
+      </ContentWrapper>
+    </div>
   );
 }
 
@@ -92,8 +95,8 @@ function getHueRotation(hexColor) {
 // Default data for new divider blocks
 export const dividerBlockDefaults = {
   dividerStyle: '1',
-  width: 80,
-  paddingY: 40,
+  width: 150,
+  paddingY: 10,
   color: null,
   backgroundColor: null
 };

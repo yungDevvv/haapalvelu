@@ -13,24 +13,22 @@ export default function TextBlock({ data, theme, animated = false }) {
     backgroundColor,
     backgroundImage,
     imagePosition = 'left',
-    paddingY = 80,
+    paddingY = 20,
     paddingX = 16
   } = data;
 
   const animationProps = animated ? {
-    initial: { opacity: 0, y: 30 },
+    initial: { opacity: 0, y: 20 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, margin: "-100px" },
     transition: { duration: 0.6, ease: "easeOut" }
   } : {};
 
-  const BlockWrapper = animated ? motion.div : 'div';
-
   // If there's a background image, use two-column layout
   if (backgroundImage) {
+    const ContentWrapper = animated ? motion.div : 'div';
     return (
-      <BlockWrapper 
-        {...animationProps} 
+      <div 
         style={{
           backgroundColor: backgroundColor || 'white',
           paddingTop: `${paddingY}px`,
@@ -39,7 +37,10 @@ export default function TextBlock({ data, theme, animated = false }) {
           paddingRight: `${paddingX}px`
         }}
       >
-        <div className="container mx-auto px-4">
+        <ContentWrapper 
+          {...animationProps}
+          className="container mx-auto px-4"
+        >
           <div className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${imagePosition === 'right' ? 'lg:flex-row-reverse' : ''}`}>
             {/* Image Column */}
             <div className={`${imagePosition === 'right' ? 'lg:order-2' : 'lg:order-1'}`}>
@@ -67,15 +68,17 @@ export default function TextBlock({ data, theme, animated = false }) {
               />
             </div>
           </div>
-        </div>
-      </BlockWrapper>
+        </ContentWrapper>
+      </div>
     );
   }
 
   // Default single column layout
+  const alignmentClass = alignment === 'center' ? 'text-center' : alignment === 'right' ? 'text-right' : 'text-left';
+  const ContentWrapper = animated ? motion.div : 'div';
+  
   return (
-    <BlockWrapper 
-      {...animationProps} 
+    <div 
       style={{
         backgroundColor: backgroundColor || 'white',
         paddingTop: `${paddingY}px`,
@@ -84,26 +87,23 @@ export default function TextBlock({ data, theme, animated = false }) {
         paddingRight: `${paddingX}px`
       }}
     >
-      <div className="container mx-auto px-4">
-        <div className={`max-w-3xl mx-auto ${alignment === 'center' ? 'text-center' : ''}`}>
-          <div 
-            className={`prose max-w-none ${contentFont ? getFontClass(contentFont) : theme.fonts.body}`}
-            style={{ 
-              color: contentColor || '#374151',
-              fontFamily: contentFont ? getFontByValue(contentFont).label : undefined,
-              lineHeight: '1.8',
-              fontSize: '16px'
-            }}
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
-        </div>
-      </div>
-    </BlockWrapper>
+      <ContentWrapper 
+        {...animationProps}
+        className={`prose max-w-none ${alignmentClass} ${contentFont ? getFontClass(contentFont) : theme.fonts.body}`}
+        style={{ 
+          color: contentColor || '#374151',
+          fontFamily: contentFont ? getFontByValue(contentFont).label : undefined,
+          lineHeight: '1.8',
+          fontSize: '16px'
+        }}
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
+    </div>
   );
 }
 
 // Default data for new text blocks
 export const textBlockDefaults = {
   content: "Kirjoita tähän tarinanne...",
-  alignment: "left"
+  alignment: "center"
 };

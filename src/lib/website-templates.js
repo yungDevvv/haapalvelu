@@ -78,7 +78,7 @@ export const websiteTemplates = [
         font: 'amatic-sc',
         color: '#6b5b7b',
         backgroundColor: '#e8dff5',
-        paddingY: 40,
+        paddingY: 20,
         paddingX: 24,
         alignment: 'center'
       },
@@ -88,7 +88,7 @@ export const websiteTemplates = [
         titleColor: '#6b5b7b',
         contentColor: '#4a4a4a',
         backgroundColor: '#e8dff5',
-        paddingY: 80,
+        paddingY: 20,
         paddingX: 24,
         alignment: 'center'
       },
@@ -100,7 +100,7 @@ export const websiteTemplates = [
         descriptionColor: '#6b5b7b',
         cardColor: '#ffffff',
         accentColor: '#9b8bb0',
-        paddingY: 80,
+        paddingY: 0,
         paddingX: 24
       },
       countdown: {
@@ -109,7 +109,7 @@ export const websiteTemplates = [
         backgroundColor: '#e8dff5',
         titleColor: '#6b5b7b',
         descriptionColor: '#6b5b7b',
-        paddingY: 80,
+        paddingY: 20,
         paddingX: 24
       },
       rsvp: {
@@ -119,7 +119,7 @@ export const websiteTemplates = [
         titleColor: '#6b5b7b',
         descriptionColor: '#6b5b7b',
         buttonColor: '#9b8bb0',
-        paddingY: 80,
+        paddingY: 20,
         paddingX: 24
       },
       gallery: {
@@ -133,8 +133,12 @@ export const websiteTemplates = [
       divider: {
         backgroundColor: '#e8dff5',
         color: '#b19cd9',
-        width: 70,
-        paddingY: 50
+        width: 250,
+        paddingY: 10
+      },
+      spacer: {
+        backgroundColor: '#e8dff5',
+        height: 40
       }
     },
     blocks: [
@@ -157,31 +161,66 @@ export const websiteTemplates = [
           overlayOpacity: 0.4
         }
       },
+      // Countdown section heading
+      {
+        id: '22',
+        type: 'spacer',
+        data: {
+          height: 40,
+          backgroundColor: '#e8dff5'
+        }
+      },
+      {
+        id: '2a',
+        type: 'heading',
+        data: {
+          text: 'Laskuri',
+          level: 'h2',
+          alignment: 'center',
+          font: 'amatic-sc',
+          color: '#6b5b7b',
+          backgroundColor: '#e8dff5',
+          paddingY: 20,
+          paddingX: 24
+        }
+      },
+      // Countdown section description
+      {
+        id: '2b',
+        type: 'text',
+        data: {
+          content: 'Kuinka kauan elämämme kauneimpaan päivään',
+          contentFont: 'lato',
+          contentColor: '#6b5b7b',
+          backgroundColor: '#e8dff5',
+          alignment: 'center',
+          paddingY: 20,
+          paddingX: 24
+        }
+      },
       // Countdown Block
       {
-        id: '2',
+        id: '2c',
         type: 'countdown',
         data: {
-          title: 'Laskuri',
-          description: 'Kuinka kauan elämämme kauneimpaan päivään',
-          titleFont: 'amatic-sc',
-          descriptionFont: 'lato',
           targetDate: '2025-07-20T15:00:00',
           backgroundColor: '#e8dff5',
           titleColor: '#6b5b7b',
-          descriptionColor: '#6b5b7b'
+          styleVariant: 'cards',
+          paddingY: 20,
+          paddingX: 24
         }
       },
       // Divider Block 1
-       {
+      {
         id: '2.5',
         type: 'divider',
         data: {
-          dividerStyle: '3',
+          dividerStyle: '4',
           backgroundColor: '#e8dff5',
           color: '#b19cd9',
-          width: 50,
-          paddingY: 50
+          width: 450,
+          paddingY: 40
         }
       },
       // Heading Block - Story title
@@ -194,9 +233,7 @@ export const websiteTemplates = [
           alignment: 'center',
           font: 'amatic-sc',
           color: '#6b5b7b',
-          backgroundColor: '#e8dff5',
-          paddingY: 40,
-          paddingX: 24
+          backgroundColor: '#e8dff5'
         }
       },
       // Text Block - Story content
@@ -208,8 +245,6 @@ export const websiteTemplates = [
           contentFont: 'lato',
           contentColor: '#4a4a4a',
           backgroundColor: '#e8dff5',
-          paddingY: 40,
-          paddingX: 24,
           alignment: 'center'
         }
       },
@@ -218,20 +253,45 @@ export const websiteTemplates = [
         id: '3.5',
         type: 'divider',
         data: {
-          dividerStyle: '3',
+          dividerStyle: '4',
           backgroundColor: '#e8dff5',
           color: '#b19cd9',
-          width: 50,
-          paddingY: 50
+          width: 450,
+          paddingY: 40
         }
       },
+      // Program section heading moved out of Program block
+      {
+        id: '3.6',
+        type: 'heading',
+        data: {
+          text: 'Päivän Ohjelma',
+          level: 'h2',
+          alignment: 'center',
+          font: 'amatic-sc',
+          color: '#6b5b7b',
+          backgroundColor: '#e8dff5'
+        }
+      },
+      {
+        id: '3.7',
+        type: 'text',
+        data: {
+          content: 'Liity mukaan juhlimaan kanssamme',
+          contentFont: 'lato',
+          contentColor: '#6b5b7b',
+          backgroundColor: '#e8dff5',
+          alignment: 'center'
+        }
+      },
+
       // Program Block
       {
         id: '4',
         type: 'program',
         data: {
-          title: 'Päivän Ohjelma',
-          description: 'Liity mukaan juhlimaan kanssamme',
+          title: '',
+          description: '',
           titleFont: 'amatic-sc',
           descriptionFont: 'lato',
           backgroundColor: '#e8dff5',
@@ -279,32 +339,106 @@ export const websiteTemplates = [
           ]
         }
       },
+      // RSVP section heading
+      {
+        id: '88',
+        type: 'divider',
+        data: {
+          dividerStyle: '4',
+          backgroundColor: '#e8dff5',
+          color: '#b19cd9',
+          width: 450,
+          paddingY: 40
+        }
+      },
+      {
+        id: '5a',
+        type: 'heading',
+        data: {
+          text: 'RSVP',
+          level: 'h2',
+          alignment: 'center',
+          font: 'amatic-sc',
+          color: '#6b5b7b',
+          backgroundColor: '#e8dff5',
+          paddingY: 20,
+          paddingX: 24
+        }
+      },
+      // RSVP section description
+      {
+        id: '5b',
+        type: 'text',
+        data: {
+          content: 'Vahvista osallistumisesi viimeistään 01.06.2025',
+          contentFont: 'lato',
+          contentColor: '#6b5b7b',
+          backgroundColor: '#e8dff5',
+          alignment: 'center',
+          paddingY: 20,
+          paddingX: 24
+        }
+      },
       // RSVP Block
       {
-        id: '5',
+        id: '5c',
         type: 'rsvp',
         data: {
-          title: 'RSVP',
-          description: 'Vahvista osallistumisesi viimeistään 01.06.2025',
-          titleFont: 'amatic-sc',
-          descriptionFont: 'lato',
           backgroundColor: '#e8dff5',
-          titleColor: '#6b5b7b',
-          descriptionColor: '#6b5b7b',
-          buttonColor: '#9b8bb0'
+          buttonColor: '#9b8bb0',
+          styleVariant: 'cards',
+          paddingY: 20,
+          paddingX: 24
+        }
+      },
+      // Gallery section heading
+      {
+        id: '89',
+        type: 'divider',
+        data: {
+          dividerStyle: '4',
+          backgroundColor: '#e8dff5',
+          color: '#b19cd9',
+          width: 450,
+          paddingY: 40
+        }
+      },
+      {
+        id: '6a',
+        type: 'heading',
+        data: {
+          text: 'Muistoja',
+          level: 'h2',
+          alignment: 'center',
+          font: 'amatic-sc',
+          color: '#6b5b7b',
+          backgroundColor: '#e8dff5',
+          paddingY: 20,
+          paddingX: 24
+        }
+      },
+      // Gallery section description
+      {
+        id: '6b',
+        type: 'text',
+        data: {
+          content: 'Yhteisiä hetkiämme',
+          contentFont: 'lato',
+          contentColor: '#6b5b7b',
+          backgroundColor: '#e8dff5',
+          alignment: 'center',
+          paddingY: 20,
+          paddingX: 24
         }
       },
       // Gallery Block
       {
-        id: '6',
+        id: '6c',
         type: 'gallery',
         data: {
-          title: 'Muistoja',
-          description: 'Yhteisiä hetkiämme',
-          titleFont: 'amatic-sc',
-          descriptionFont: 'lato',
           backgroundColor: '#e8dff5',
-          titleColor: '#6b5b7b',
+          paddingY: 20,
+          paddingX: 24,
           images: [
             { url: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070', caption: 'Romanttinen hetki' },
             { url: 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?q=80&w=2070', caption: 'Yhdessä' },
@@ -313,6 +447,15 @@ export const websiteTemplates = [
             // { url: 'https://images.unsplash.com/photo-1529634118570-e5aa47071e0d?q=80&w=2069', caption: 'Sormukset' },
             // { url: 'https://images.unsplash.com/photo-1522413452208-996ff3f3e740?q=80&w=2070', caption: 'Juhla' }
           ]
+        }
+      },
+      // Spacer block
+      {
+        id: '7',
+        type: 'spacer',
+        data: {
+          height: 60,
+          backgroundColor: '#e8dff5'
         }
       }
     ]
@@ -395,7 +538,7 @@ export const websiteTemplates = [
         font: 'amatic-sc',
         color: '#ffffff',
         backgroundColor: '#1a4d5e',
-        paddingY: 45,
+        paddingY: 20,
         paddingX: 24,
         alignment: 'center'
       },
@@ -405,7 +548,7 @@ export const websiteTemplates = [
         titleColor: '#ffffff',
         contentColor: '#e8f4f8',
         backgroundColor: '#1a4d5e',
-        paddingY: 90,
+        paddingY: 20,
         paddingX: 24,
         alignment: 'center'
       },
@@ -450,8 +593,12 @@ export const websiteTemplates = [
       divider: {
         backgroundColor: '#1a4d5e',
         color: '#4a8a9f',
-        width: 70,
-        paddingY: 50
+        width: 250,
+        paddingY: 10
+      },
+      spacer: {
+        backgroundColor: '#1a4d5e',
+        height: 40
       }
     },
     blocks: [
@@ -484,9 +631,7 @@ export const websiteTemplates = [
           alignment: 'center',
           font: 'amatic-sc',
           color: '#ffffff',
-          backgroundColor: '#1a4d5e',
-          paddingY: 45,
-          paddingX: 24
+          backgroundColor: '#1a4d5e'
         }
       },
       // Text Block - Info content
@@ -498,21 +643,19 @@ export const websiteTemplates = [
           contentFont: 'lato',
           contentColor: '#e8f4f8',
           backgroundColor: '#1a4d5e',
-          paddingY: 45,
-          paddingX: 24,
           alignment: 'center'
         }
       },
       // Divider Block 1
-     {
+      {
         id: '2.5',
         type: 'divider',
         data: {
           dividerStyle: '4',
           backgroundColor: '#1a4d5e',
           color: '#5eb8d4',
-          width: 50,
-          paddingY: 50
+          width: 250,
+          paddingY: 40
         }
       },
       // Program Block
@@ -559,8 +702,8 @@ export const websiteTemplates = [
           dividerStyle: '4',
           backgroundColor: '#1a4d5e',
           color: '#5eb8d4',
-          width: 50,
-          paddingY: 50
+          width: 250,
+          paddingY: 40
         }
       },
       // Heading Block - Additional info title
@@ -573,9 +716,7 @@ export const websiteTemplates = [
           alignment: 'center',
           font: 'amatic-sc',
           color: '#ffffff',
-          backgroundColor: '#1a4d5e',
-          paddingY: 40,
-          paddingX: 24
+          backgroundColor: '#1a4d5e'
         }
       },
       // Text Block - Additional info content
@@ -587,24 +728,48 @@ export const websiteTemplates = [
           contentFont: 'lato',
           contentColor: '#e8f4f8',
           backgroundColor: '#1a4d5e',
-          paddingY: 40,
-          paddingX: 24,
           alignment: 'center'
         }
       },
-      // RSVP
+      // RSVP section heading
       {
-        id: '5',
+        id: '5a',
+        type: 'heading',
+        data: {
+          text: 'RSVP',
+          level: 'h2',
+          alignment: 'center',
+          font: 'amatic-sc',
+          color: '#ffffff',
+          backgroundColor: '#1a4d5e',
+          paddingY: 20,
+          paddingX: 24
+        }
+      },
+      // RSVP section description
+      {
+        id: '5b',
+        type: 'text',
+        data: {
+          content: 'Vahvista osallistumisesi viimeistään 01.07.2025',
+          contentFont: 'lato',
+          contentColor: '#e8f4f8',
+          backgroundColor: '#1a4d5e',
+          alignment: 'center',
+          paddingY: 20,
+          paddingX: 24
+        }
+      },
+      // RSVP Block
+      {
+        id: '5c',
         type: 'rsvp',
         data: {
-          title: 'RSVP',
-          description: 'Vahvista osallistumisesi viimeistään 01.07.2025',
-          titleFont: 'amatic-sc',
-          descriptionFont: 'lato',
           backgroundColor: '#1a4d5e',
-          titleColor: '#ffffff',
-          descriptionColor: '#e8f4f8',
-          buttonColor: '#4a8a9f'
+          buttonColor: '#4a8a9f',
+          styleVariant: 'cards',
+          paddingY: 20,
+          paddingX: 24
         }
       },
       // Gallery Block
@@ -628,6 +793,15 @@ export const websiteTemplates = [
       //     ]
       //   }
       // }
+      // Spacer block
+      {
+        id: '7',
+        type: 'spacer',
+        data: {
+          height: 60,
+          backgroundColor: '#1a4d5e'
+        }
+      }
     ]
   }
 ];

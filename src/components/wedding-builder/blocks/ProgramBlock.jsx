@@ -15,7 +15,9 @@ export default function ProgramBlock({ data, theme, animated = false }) {
     descriptionColor,
     cardColor,
     accentColor,
-    styleVariant = 'classic' // classic, timeline, cards, minimal
+    styleVariant = 'classic', // classic, timeline, cards, minimal
+    paddingY = 20,
+    paddingX = 16
   } = data;
 
   const animationProps = animated ? {
@@ -24,8 +26,6 @@ export default function ProgramBlock({ data, theme, animated = false }) {
     viewport: { once: true, margin: "-100px" },
     transition: { duration: 0.6, ease: "easeOut" }
   } : {};
-
-  const BlockWrapper = animated ? motion.div : 'div';
 
   // Render based on style variant
   const renderContent = () => {
@@ -245,41 +245,56 @@ export default function ProgramBlock({ data, theme, animated = false }) {
     </div>
   );
 
+  const ContentWrapper = animated ? motion.div : 'div';
+
   return (
-    <BlockWrapper 
-      {...animationProps} 
-      className="py-20"
-      style={{ backgroundColor: backgroundColor || 'white' }}
+    <div
+      style={{ 
+        backgroundColor: backgroundColor || 'white',
+        paddingTop: `${paddingY}px`,
+        paddingBottom: `${paddingY}px`,
+        paddingLeft: `${paddingX}px`,
+        paddingRight: `${paddingX}px`
+      }}
     >
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 
-            className={`text-4xl md:text-5xl mb-4 ${theme.fonts.heading}`} 
-            style={{ color: titleColor || theme.colors.primary }}
-          >
-            {title}
-          </h2>
-          {description && (
-            <p 
-              className="text-lg max-w-2xl mx-auto"
-              style={{ color: descriptionColor || '#6b7280' }}
-            >
-              {description}
-            </p>
-          )}
-        </div>
+      <ContentWrapper
+        {...animationProps}
+        className="container mx-auto px-4"
+      >
+        {(title || description) && (
+          <div className="text-center mb-12">
+            {title && (
+              <h2 
+                className={`text-4xl md:text-5xl mb-4 ${theme.fonts.heading}`} 
+                style={{ color: titleColor || theme.colors.primary }}
+              >
+                {title}
+              </h2>
+            )}
+            {description && (
+              <p 
+                className="text-lg max-w-2xl mx-auto"
+                style={{ color: descriptionColor || '#6b7280' }}
+              >
+                {description}
+              </p>
+            )}
+          </div>
+        )}
 
         {renderContent()}
-      </div>
-    </BlockWrapper>
+      </ContentWrapper>
+    </div>
   );
 }
 
 // Default data for new program blocks
 export const programBlockDefaults = {
-  title: "Päivän Ohjelma",
-  description: "Tervetuloa viettämään kanssamme unohtumaton päivä",
+  title: "",
+  description: "",
   styleVariant: 'classic',
+  paddingY: 20,
+  paddingX: 16,
   events: [
     {
       time: "15:00",

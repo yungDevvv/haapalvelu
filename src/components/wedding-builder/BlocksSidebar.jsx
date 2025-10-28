@@ -11,7 +11,8 @@ import {
   Text,
   Type,
   Palette,
-  Minus
+  Minus,
+  Menu
 } from "lucide-react";
 import {
   Select,
@@ -71,11 +72,17 @@ export default function BlocksSidebar({ onAddBlock, currentTheme, onThemeChange,
       icon: Minus,
       label: 'Erotin',
       description: 'Visuaalinen erotin'
+    },
+    {
+      type: 'navigation',
+      icon: Menu,
+      label: 'Navigaatio',
+      description: 'Navigaation valikko'
     }
   ];
 
   return (
-    <div className="w-80 bg-white border-r border-gray-200 p-6 overflow-y-auto">
+    <div className="w-80 bg-white border-r border-gray-200 p-6 overflow-y-auto hidden">
       <div className="space-y-6">
         {/* Theme selector */}
         <div>
@@ -131,7 +138,7 @@ export default function BlocksSidebar({ onAddBlock, currentTheme, onThemeChange,
         </div>
 
         {/* Template Info */}
-        {currentTemplate?.blockDefaults && (
+        {/* {currentTemplate?.blockDefaults && (
           <div className="mt-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
             <div className="flex items-start gap-2">
               <span className="text-purple-600 text-lg">✨</span>
@@ -146,15 +153,15 @@ export default function BlocksSidebar({ onAddBlock, currentTheme, onThemeChange,
               </div>
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Instructions */}
-        <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+        {/* <div className="mt-6 p-4 bg-blue-50 rounded-lg">
           <p className="text-xs text-blue-800">
             💡 <strong>Vinkki:</strong> Klikkaa lohkoa lisätäksesi sen sivulle. 
             Voit järjestellä ja muokata lohkoja esikatselu-alueella.
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
   );
